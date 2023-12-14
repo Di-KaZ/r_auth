@@ -1,0 +1,4 @@
+[default]
+address = "0.0.0.0"
+[global.databases.auth]
+url = "postgres://postgres:mydbpassword@localhost:3350/auth"

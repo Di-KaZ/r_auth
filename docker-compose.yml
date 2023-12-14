@@ -1,0 +1,43 @@
+version: "3.4"
+services:
+  db:
+    image: postgres
+    env_file: .env
+    restart: always
+    ports:
+      - "3350:5432"
+    environment:
+      POSTGRES_PASSWORD: $DB_PASSWORD
+    volumes:
+      - ./db_data:/var/lib/postgresql/data
+  rabbitmq:
+    image: rabbitmq:3-management
+    env_file: .env
+    restart: always
+    ports:
+      - "3351:15672" 
+      - "3352:5672" 
+  auth_api:
+    image: auth_api
+    build:
+      context: ./auth_api
+      dockerfile: Dockerfile
+    env_file: .env
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "3353:8000"
+  mailhog:
+    image: mailhog/mailhog
+    restart: always
+    ports:
+      - "3354:8025"
+      - "1025:1025"      
+  email_api:
+    image: email_api
+    build:
+      context: ./email_api
+      dockerfile: Dockerfile
+    env_file: .env
+    restart: always
